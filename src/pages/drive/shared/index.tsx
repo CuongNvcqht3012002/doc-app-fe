@@ -39,12 +39,12 @@ export default function Index() {
   return (
     <Layout>
       <Head>
-        <title>Shared</title>
+        <title>Shared With Me</title>
         <meta name="description" content="This is a google drive clone!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <FileHeader headerName={"Shared"} />
+        <FileHeader headerName={"Shared With Me"} />
         <div className="h-[75vh] w-full overflow-y-auto p-5">
           {/* If the list is loading, display the loading state */}
           {!isFile && !isFolder && isLoading ? (

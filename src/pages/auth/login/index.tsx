@@ -19,6 +19,8 @@ import { useState } from 'react'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
@@ -27,12 +29,14 @@ export default function Login() {
           <Heading fontSize={'2xl'}>Sign in to your account</Heading>
           <FormControl id="email" isRequired>
             <FormLabel>Email address</FormLabel>
-            <Input type="email" />
+            <Input type="email" value={email}
+              onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
           <FormControl id="password" isRequired>
             <FormLabel>Password</FormLabel>
             <InputGroup>
-              <Input type={showPassword ? 'text' : 'password'} />
+              <Input type={showPassword ? 'text' : 'password'} value={password}
+              onChange={(e) => setPassword(e.target.value)} />
               <InputRightElement h={'full'}>
                 <Button
                   variant={'ghost'}

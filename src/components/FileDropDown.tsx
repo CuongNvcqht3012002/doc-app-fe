@@ -1,5 +1,5 @@
-import React from "react";
-import { HiOutlineArrowsExpand } from "react-icons/hi";
+import React, { useState } from "react";
+import { HiOutlineArrowsExpand, HiShare } from "react-icons/hi";
 import {
   MdDriveFileRenameOutline,
   MdOutlineRestore,
@@ -10,6 +10,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbDownload } from "react-icons/tb";
 import { deleteFile, renameFile, starFile, trashFile } from "@/API/Firestore";
 import { useRouter } from "next/router";
+import ShareModal from './ShareModal';
 
 function FileDropDown({
   file,
@@ -26,45 +27,60 @@ function FileDropDown({
     window.open(fileLink, "_blank");
   };
 
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const shareFile = (fileId: string, userEmail: string) => {
+    // Call your API or method to share the file
+    console.log(`Sharing file ${fileId} with ${userEmail}`);
+    // Implement your sharing logic here
+  };
+
   return (
-    <section
-      onClick={() => setOpenMenu("")}
-      className={`absolute top-9 z-10 ${
-        select == "trashed" ? "h-fit" : "h-40"
-      } w-48 overflow-y-scroll rounded-md border bg-white shadow-sm shadow-[#777]`}
-    >
-      {select !== "trashed" ? (
-        <>
-          <div
-            onClick={() =>
-              isFolderComp
-                ? router.push("/drive/folders/" + folderId)
-                : openFile(file.fileLink)
-            }
-            className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
-          >
-            <HiOutlineArrowsExpand className="h-5 w-5" />
-            <span className="text-sm">Open File</span>
-          </div>
-          {!isFolderComp && (
-            <a
-              href={file.fileLink}
-              download={file.fileName}
+    <>
+      <section
+        onClick={() => setOpenMenu("")}
+        className={`absolute top-9 z-10 ${select == "trashed" ? "h-fit" : "h-40"
+          } w-48 overflow-y-scroll rounded-md border bg-white shadow-sm shadow-[#777]`}
+      >
+        {select !== "trashed" ? (
+          <>
+            <div
+              onClick={() =>
+                isFolderComp
+                  ? router.push("/drive/folders/" + folderId)
+                  : openFile(file.fileLink)
+              }
               className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
             >
-              <TbDownload className="h-5 w-5" />
-              <span className="text-sm">Download</span>
-            </a>
-          )}
+              <HiOutlineArrowsExpand className="h-5 w-5" />
+              <span className="text-sm">Open File</span>
+            </div>
+            <div
+              onClick={() => starFile(file.id, !file.isStarred)}
+              className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
+            >
+              <HiShare className="h-5 w-5" />
+              <span className="text-sm">Share</span>
+            </div>
+            {!isFolderComp && (
+              <a
+                href={file.fileLink}
+                download={file.fileName}
+                className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
+              >
+                <TbDownload className="h-5 w-5" />
+                <span className="text-sm">Download</span>
+              </a>
+            )}
 
-          <div
-            onClick={() => setRenameToggle(file.id)}
-            className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
-          >
-            <MdDriveFileRenameOutline className="h-5 w-5" />
-            <span className="text-sm">Rename</span>
-          </div>
-          {/* <div
+            <div
+              onClick={() => setRenameToggle(file.id)}
+              className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
+            >
+              <MdDriveFileRenameOutline className="h-5 w-5" />
+              <span className="text-sm">Rename</span>
+            </div>
+            {/* <div
             onClick={() => starFile(file.id, !file.isStarred)}
             className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
           >
@@ -75,33 +91,40 @@ function FileDropDown({
             )}
             <span className="text-sm">Add to starred</span>
           </div> */}
-          <div
-            onClick={() => trashFile(file.id, true)}
-            className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
-          >
-            <RiDeleteBin6Line className="h-5 w-5" />
-            <span className="text-sm">Move to bin</span>
-          </div>
-        </>
-      ) : (
-        <>
-          <div
-            onClick={() => trashFile(file.id, false)}
-            className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
-          >
-            <MdOutlineRestore className="h-5 w-5" />
-            <span className="text-sm">Restore</span>
-          </div>
-          <div
-            onClick={() => deleteFile(file.id, file.isFolder)}
-            className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
-          >
-            <RiDeleteBin6Line className="h-5 w-5" />
-            <span className="text-sm">Delete forever</span>
-          </div>
-        </>
-      )}
-    </section>
+            <div
+              onClick={() => trashFile(file.id, true)}
+              className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
+            >
+              <RiDeleteBin6Line className="h-5 w-5" />
+              <span className="text-sm">Move to bin</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div
+              onClick={() => trashFile(file.id, false)}
+              className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
+            >
+              <MdOutlineRestore className="h-5 w-5" />
+              <span className="text-sm">Restore</span>
+            </div>
+            <div
+              onClick={() => deleteFile(file.id, file.isFolder)}
+              className="my-2 flex items-center space-x-3 px-3 py-1.5 hover:cursor-pointer hover:bg-[#ddd]"
+            >
+              <RiDeleteBin6Line className="h-5 w-5" />
+              <span className="text-sm">Delete forever</span>
+            </div>
+          </>
+        )}
+      </section>
+      {/* {<ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        onShare={shareFile}
+        fileId={file.id}
+      />} */}
+    </>
   );
 }
 

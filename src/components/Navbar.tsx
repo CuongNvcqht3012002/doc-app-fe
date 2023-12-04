@@ -37,7 +37,7 @@ function Navbar() {
         ) : (
           <DiGoogleDrive className="tablet:h-5 tablet:w-5 h-6 w-6 rounded-sm border-[2.3px] border-textC" />
         )}
-        <span className="tablet:block hidden">My Shared</span>
+        <span className="tablet:block hidden">Shared with me</span>
       </Link>
       {/* <Link
         href={"/drive/starred"}
